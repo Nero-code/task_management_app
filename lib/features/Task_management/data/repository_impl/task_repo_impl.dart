@@ -47,7 +47,6 @@ class TasksRepoImpl implements TasksRepo {
 
   @override
   Future<Either<Failure, List<t.Task>>> getTasks() async {
-    print("get Tasks");
     if (await networkInfo.isConnected()) {
       try {
         if (currentPage == lastPage) {
@@ -62,7 +61,6 @@ class TasksRepoImpl implements TasksRepo {
             loadedTasks.add(task);
           }
         }
-        print("From local loadedTasks: $loadedTasks");
         // loadedTasks.toSet().toList();
         ++currentPage;
         ++localCurrentPage;
