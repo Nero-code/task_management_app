@@ -35,9 +35,21 @@ class AuthRepoImpl implements AuthRepo {
 
   @override
   Future<Either<Failure, Unit>> signup(
-      {required String email, required String pass}) {
-    // TODO: implement signup
-    throw UnimplementedError();
+      {required String email, required String pass}) async {
+    if (await networkInfo.isConnected()) {
+      try {
+        final user = await remoteAuthSource.signupWithCredentials(
+            email: email, password: pass);
+        await localAuthSource.saveUserCredentials(user);
+        return Right(unit);
+      } on Exception {
+        return Left(
+          DatabaseFailure("failure"),
+        );
+      }
+    } else {
+      return Left(OfflineFailure("No Internet Connection"));
+    }
   }
 
   @override
